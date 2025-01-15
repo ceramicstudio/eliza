@@ -8,10 +8,11 @@ import {
 import { GateActionContent } from "../types.ts";
 // import { nonceProvider } from "../provider.ts";
 import { WalletHandshake } from "../services/wallet.service.ts";
+import { gateDataProvider } from "../provider.ts";
 
 export const verifyAction: Action = {
     name: "NONCE_VERIFY",
-    description: "Signs a nonce to verify the wallet and address of the user",
+    description: "Verifies the signature of the user for the handshake",
     similes: ["NONCE_VERIFY", "VERIFY_MESSAGE"],
     examples: [
         [
@@ -75,6 +76,17 @@ export const verifyAction: Action = {
                 signedMessage.address
             );
             if (isVerified) {
+                const provider = await gateDataProvider.get(
+                    runtime,
+                    message,
+                    state
+                );
+                const res = await provider.provider.verifyUser(
+                    signedMessage.address,
+                    message.userId,
+                    true
+                );
+                console.log("User verified:", res);
                 await runtime.knowledgeManager.createMemory({
                     content: {
                         text: signedMessage.address,

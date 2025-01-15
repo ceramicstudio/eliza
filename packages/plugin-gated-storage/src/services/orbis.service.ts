@@ -8,6 +8,12 @@ export type ServerMessage = Memory & {
     is_user: boolean;
 };
 
+export type VerifiedContent = {
+    address: string;
+    user_id: string;
+    verified: boolean;
+};
+
 export class Orbis {
     private static instance: Orbis;
     private db: OrbisDB;
@@ -81,7 +87,31 @@ export class Orbis {
             .run();
     }
 
-    public async query(text: string): Promise<{
+    public async createVerifiedEntry(
+        content: VerifiedContent
+    ): Promise<CeramicDocument> {
+        if (!process.env.VERIFIED_TABLE) {
+            throw new Error("Missing verified table");
+        }
+        if (!process.env.CONTEXT_ID) {
+            throw new Error(
+                "CONTEXT_ID is not defined in the environment variables."
+            );
+        }
+        try {
+            await this.getAuthenticatedInstance();
+            return await this.db
+                .insert(process.env.VERIFIED_TABLE)
+                .value(content)
+                .context(process.env.CONTEXT_ID)
+                .run();
+        } catch (error: any) {
+            console.error("Error storing message:", error);
+            throw error;
+        }
+    }
+
+    public async queryKnowledgeIndex(text: string): Promise<{
         columns: Array<string>;
         rows: ServerMessage[];
     } | null> {
@@ -90,6 +120,17 @@ export class Orbis {
         return result as {
             columns: Array<string>;
             rows: ServerMessage[];
+        } | null;
+    }
+    public async queryVerifiedIndex(text: string): Promise<{
+        columns: Array<string>;
+        rows: VerifiedContent[];
+    } | null> {
+        await this.getAuthenticatedInstance();
+        const result = await this.db.select().raw(text).run();
+        return result as {
+            columns: Array<string>;
+            rows: VerifiedContent[];
         } | null;
     }
 }
