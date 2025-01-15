@@ -48,6 +48,7 @@ import { evmPlugin } from "@elizaos/plugin-evm";
 import { storyPlugin } from "@elizaos/plugin-story";
 import { flowPlugin } from "@elizaos/plugin-flow";
 import { fuelPlugin } from "@elizaos/plugin-fuel";
+import { gateDataPlugin } from "@elizaos/plugin-gated-storage";
 import { imageGenerationPlugin } from "@elizaos/plugin-image-generation";
 import { ThreeDGenerationPlugin } from "@elizaos/plugin-3d-generation";
 import { multiversxPlugin } from "@elizaos/plugin-multiversx";
@@ -559,6 +560,7 @@ export async function createAgent(
             getSecret(character, "COINBASE_COMMERCE_KEY")
                 ? coinbaseCommercePlugin
                 : null,
+            getSecret(character, "CONTEXT_ID") ? gateDataPlugin : null,
             getSecret(character, "FAL_API_KEY") ||
             getSecret(character, "OPENAI_API_KEY") ||
             getSecret(character, "VENICE_API_KEY") ||
