@@ -4,7 +4,9 @@ import { signAction } from "./actions/sign-action.ts";
 import { nonceAction } from "./actions/nonce-action.ts";
 import { verifyAction } from "./actions/verify-action.ts";
 import { unlockDataAction } from "./actions/unlock-action.ts";
+import { knowledgeEvaluator } from "./evaluators/fact.ts";
 import { gateDataProvider, nonceProvider } from "./provider.ts";
+import { factsProvider } from "./facts.ts";
 
 export const gateDataPlugin: Plugin = {
     name: "gated",
@@ -16,8 +18,8 @@ export const gateDataPlugin: Plugin = {
         verifyAction,
         unlockDataAction,
     ],
-    evaluators: [],
-    providers: [gateDataProvider, nonceProvider],
+    evaluators: [knowledgeEvaluator],
+    providers: [gateDataProvider, nonceProvider, factsProvider],
 };
 
 export default gateDataPlugin;
