@@ -72,7 +72,7 @@
         "@fal-ai/client": "1.2.0",
         "@tavily/core": "^0.0.2",
         "@types/uuid": "10.0.0",
-        "ai": "4.1.16",
+        "ai": "5.0.52",
         "anthropic-vertex-ai": "1.0.2",
         "dotenv": "16.4.5",
         "fastembed": "1.14.1",
